@@ -4,52 +4,30 @@ from django.template import RequestContext
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.conf import settings
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import BadHeaderError
 from django.template import loader
+import json
+from django.http import JsonResponse
 
 # Create your views here.
 User = get_user_model()
 
+
 def register(request):
-    next = request.GET.get('next', '/')
-    try:
-        username = request.POST['username']
-        password = request.POST['password']
-        auth_user = authenticate(request, username=username, password=password)
+    # Only accept POST requests
+    if request.method == "POST":
+        # Parse JSON data from request body
         try:
-            login(request, auth_user)
-            return HttpResponseRedirect(next)
-        except:
-            messages.error(request, 'Invalid credentials')
-            return HttpResponseRedirect(next)
-    except (KeyError):
-        messages.error(request, 'Invalid credentials')
-        #return render(request, '/', { 'message': "Invalid username or password. Please try again." })
+            data = json.loads(request.body.decode("utf-8"))
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"})
 
+        # Create new user object
+        user = User(username=data.get("username"), email=data.get("email"))
+        user.set_password(data.get("password"))
+        user.save()
 
-def register(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        firstname = request.POST['firstname']
-        lastname = request.POST['lastname']
-        email = request.POST['email']
-
-        print("----------------- register called")
-        print(username)
-        print(password)
-        print(firstname)
-        print(lastname)
-        print(email)
-
-        # try:
-        #     user = get_object_or_404(User, username=username)
-        # except:
-        #     pass
-
-        messages.success(request,
-                         f'Your account has been created! You can now login!')
-        return redirect('login')
-    else:
-        return render(request, 'users/register.html')
+        # Return JSON response with success message
+        return JsonResponse({"success": True, "message": "User created successfully"})

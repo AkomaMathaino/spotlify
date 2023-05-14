@@ -132,3 +132,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Overriding Default User Model
 AUTH_USER_MODEL = "users.User"
+
+
+class DisableMigrations(object):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return None
+
+
+# MIGRATION_MODULES = DisableMigrations()

@@ -7,11 +7,9 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('register/', user_views.register, name='register'),
-    path('login/',
-         auth_views.LoginView.as_view(template_name='users/login.html'),
-         name='login'),
-    path('logout/',
-         auth_views.LogoutView.as_view(template_name='users/logout.html'),
-         name='logout'),
+    path("api/register/", user_views.register, name="register"),
+    path("api/login/", user_views.login_user, name="login"),
+    path("api/logout/", user_views.logout_user, name="logout"),
+    path("api/user/<int:pk>/", user_views.get_user_info, name="user_info"),
+    path("api/user/<int:pk>/update", user_views.update_user_info, name="update_info"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

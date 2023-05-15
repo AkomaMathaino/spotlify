@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "tutorials",
     "users",
+    "playlists",
+    "songs",
+    "albums",
+    "artists",
 ]
 
 MIDDLEWARE = [

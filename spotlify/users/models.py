@@ -44,3 +44,10 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = "username"
+
+
+class VerificationRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    approval_status = models.CharField(max_length=20, default="pending")
+    name = models.CharField(max_length=20, unique=True)
+    bio = models.TextField(max_length=300, blank=True, null=True)

@@ -3,6 +3,8 @@ import pytest
 from rest_framework.test import APIClient
 import json
 from .models import User
+from django.test import RequestFactory
+from django.urls import reverse
 
 
 # Create your tests here.
@@ -31,3 +33,13 @@ def login_user(register_user):
 @pytest.mark.django_db
 def test_login_user(login_user):
     assert login_user["success"]
+
+
+@pytest.mark.django_db
+def test_verification_request(register_user, login_user):
+    url = f"/api/verification_request/{register_user['id']}"
+    payload = dict(name="john doe")
+    client.force_authenticate(user=User.objects.get(id=register_user["id"]))
+    response = client.post(url, payload, format="json", follow=True)
+    print(response.content)
+    assert response.status_code == 200

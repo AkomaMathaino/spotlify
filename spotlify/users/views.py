@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.conf import settings
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.middleware.csrf import get_token
 from django.core.mail import BadHeaderError
 from django.template import loader
 import json
@@ -45,6 +46,7 @@ def register(request):
         )
 
 
+@csrf_exempt
 def login_user(request):
     if request.method == "POST":
         if not request.body:

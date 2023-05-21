@@ -147,3 +147,12 @@ class DisableMigrations(object):
 
 
 # MIGRATION_MODULES = DisableMigrations()
+
+
+# CSRF_TRUSTED_ORIGINS = config(
+#     "CSRF_TRUSTED_ORIGINS",
+#     default="",
+#     cast=lambda v: [origin.strip() for origin in v.split(",")]
+#     if isinstance(v, str)
+#     else [],
+# )

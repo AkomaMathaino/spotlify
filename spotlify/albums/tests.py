@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
@@ -66,8 +65,6 @@ class AlbumListTestCase(TestCase):
             reverse("album_list", args=[self.user1.pk]), format="json"
         )
         albums = response.json()
-        print(response.content)
-        print(albums)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(albums[0]["title"], album1_data["title"])

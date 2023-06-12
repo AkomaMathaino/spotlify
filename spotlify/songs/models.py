@@ -9,3 +9,10 @@ class Song(models.Model):
     streams = models.PositiveIntegerField(default=0)
     length = models.DurationField()
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_song_per_album", fields=["title", "album"]
+            )
+        ]

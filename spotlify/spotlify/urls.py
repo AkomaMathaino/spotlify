@@ -21,4 +21,5 @@ urlpatterns = [
     path("", include("tutorials.urls")),
     path("", include("users.urls")),
     path("", include("albums.urls")),
+    path("", include("songs.urls")),
 ]

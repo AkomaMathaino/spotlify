@@ -62,3 +62,20 @@ class SongListTestCase(TestCase):
         self.assertEqual(songs[0]["title"], song1_data["title"])
         self.assertEqual(songs[0]["genre"], song1_data["genre"])
         self.assertEqual(songs[1]["title"], song2_data["title"])
+
+    def test_song_delete(self):
+        song_data = {"title": "title", "genre": "genre", "length": "PT3M30S"}
+
+        response = self.client.post(
+            reverse("song_list", args=[self.user.pk, self.album.pk]),
+            song_data,
+            format="json",
+        )
+
+        song_id = response.json()["id"]
+
+        response = self.client.delete(
+            reverse("song_delete", args=[self.user.pk, self.album.pk, song_id])
+        )
+
+        self.assertEqual(response.status_code, 200)

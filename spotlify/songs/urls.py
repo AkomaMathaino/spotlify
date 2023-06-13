@@ -11,4 +11,9 @@ urlpatterns = [
         csrf_exempt(song_views.song_list),
         name="song_list",
     ),
+    path(
+        "api/songs/<int:pk>/<int:album_pk>/<int:song_pk>/",
+        csrf_exempt(song_views.song_delete),
+        name="song_delete",
+    ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -38,3 +38,22 @@ def song_list(request, pk, album_pk):
         songs = Song.objects.filter(album=album)
         serializer = SongSerializer(songs, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+@login_required
+def song_delete(request, pk, album_pk, song_pk):
+    user = get_object_or_404(User, pk=pk)
+    if user != request.user:
+        return JsonResponse({"error": "Unauthorized"}, status=401)
+    album = get_object_or_404(Album, pk=album_pk)
+
+    if request.method == "DELETE":
+        song = get_object_or_404(Song, id=song_pk)
+
+        if song.album != album:
+            return JsonResponse(
+                {"error": "Song does not belong to specified album."}, status=404
+            )
+
+        song.delete()
+        return JsonResponse({"message": "Song deleted successfully"})

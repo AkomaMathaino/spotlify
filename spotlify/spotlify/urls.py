@@ -22,4 +22,5 @@ urlpatterns = [
     path("", include("users.urls")),
     path("", include("albums.urls")),
     path("", include("songs.urls")),
+    path("", include("playlists.urls")),
 ]

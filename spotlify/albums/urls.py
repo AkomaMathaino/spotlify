@@ -10,4 +10,9 @@ urlpatterns = [
     path(
         "api/albums/<int:pk>/", csrf_exempt(album_views.album_list), name="album_list"
     ),
+    path(
+        "api/albums/<int:pk>/<int:album_pk>/",
+        csrf_exempt(album_views.album_delete),
+        name="album_delete",
+    ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

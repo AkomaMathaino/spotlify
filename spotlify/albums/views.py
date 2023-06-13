@@ -53,3 +53,15 @@ def album_list(request, pk):
         albums = Album.objects.filter(primary_artist=artist)
         serializer = AlbumSerializer(albums, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+@login_required
+def album_delete(request, pk, album_pk):
+    user = get_object_or_404(User, pk=pk)
+    if user != request.user:
+        return JsonResponse({"error": "Unauthorized"}, status=401)
+    album = get_object_or_404(Album, pk=album_pk)
+
+    if request.method == "DELETE":
+        album.delete()
+        return JsonResponse({"message": "Song deleted successfully"})

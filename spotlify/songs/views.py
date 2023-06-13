@@ -46,10 +46,9 @@ def song_delete(request, pk, album_pk, song_pk):
     if user != request.user:
         return JsonResponse({"error": "Unauthorized"}, status=401)
     album = get_object_or_404(Album, pk=album_pk)
+    song = get_object_or_404(Song, id=song_pk)
 
     if request.method == "DELETE":
-        song = get_object_or_404(Song, id=song_pk)
-
         if song.album != album:
             return JsonResponse(
                 {"error": "Song does not belong to specified album."}, status=404

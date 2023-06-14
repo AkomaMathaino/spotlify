@@ -1,13 +1,13 @@
-from django.shortcuts import render
-from albums.models import Album
-from .models import Song
-from rest_framework import status
-from rest_framework.parsers import JSONParser
-from .serializers import SongSerializer
-from django.http.response import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from django.http.response import JsonResponse
+from rest_framework import status
+from rest_framework.parsers import JSONParser
+from albums.models import Album
+from .models import Song
+from .serializers import SongSerializer
+
 
 # Create your views here.
 User = get_user_model()

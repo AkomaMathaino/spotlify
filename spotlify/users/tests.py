@@ -1,7 +1,7 @@
 from django.test import TestCase
-import pytest
 from rest_framework.test import APIClient
 from .models import User
+import pytest
 
 
 # Create your tests here.

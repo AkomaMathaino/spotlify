@@ -1,13 +1,12 @@
-from django.shortcuts import render
-from .models import Playlist
-from songs.models import Song
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from django.http.response import JsonResponse
 from rest_framework import status
 from rest_framework.parsers import JSONParser
 from .serializers import PlaylistSerializer
-from django.http.response import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from .models import Playlist
+from songs.models import Song
 
 
 # Create your views here.

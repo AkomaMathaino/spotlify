@@ -1,15 +1,14 @@
-from django.shortcuts import render
-from .models import Album
-from artists.models import Artist
-from rest_framework import status
-from rest_framework.parsers import JSONParser
-from .serializers import AlbumSerializer
-from django.http.response import JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from django.http.response import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import JSONParser
+from rest_framework import status
+from .serializers import AlbumSerializer
+from .models import Album
+from artists.models import Artist
 
 
 # Create your views here.

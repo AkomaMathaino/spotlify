@@ -16,4 +16,9 @@ urlpatterns = [
         csrf_exempt(playlist_views.playlist_specific),
         name="playlist_specific",
     ),
+    path(
+        "api/playlists/<int:pk>/<int:playlist_pk>/songs/<int:song_pk>/",
+        csrf_exempt(playlist_views.playlist_song_delete),
+        name="playlist_song_delete",
+    ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

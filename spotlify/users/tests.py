@@ -1,10 +1,7 @@
 from django.test import TestCase
 import pytest
 from rest_framework.test import APIClient
-import json
 from .models import User
-from django.test import RequestFactory
-from django.urls import reverse
 
 
 # Create your tests here.

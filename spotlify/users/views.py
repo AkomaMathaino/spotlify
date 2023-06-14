@@ -1,14 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext
-from django.contrib import messages
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.conf import settings
-from django.urls import reverse
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-from django.middleware.csrf import get_token
-from django.core.mail import BadHeaderError
-from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test

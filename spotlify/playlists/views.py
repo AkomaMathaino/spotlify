@@ -1,18 +1,13 @@
 from django.shortcuts import render
 from .models import Playlist
 from songs.models import Song
-from artists.models import Artist
 from rest_framework import status
 from rest_framework.parsers import JSONParser
 from .serializers import PlaylistSerializer
 from django.http.response import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.forms.models import model_to_dict
 
 
 # Create your views here.

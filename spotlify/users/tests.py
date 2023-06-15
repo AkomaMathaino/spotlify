@@ -1,42 +1,105 @@
 from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from .models import User
 import pytest
+import json
 
 
 # Create your tests here.
-client = APIClient()
+class UserTestCase(TestCase):
+    def setUp(self):
+        # Create data to be used in tests
+        self.user_data = {
+            "username": "testusername",
+            "password": "testpassword",
+            "email": "testemail@gmail.com",
+        }
 
+        self.new_info = {"username": "newusername", "email": "newemail@gmail.com"}
 
-@pytest.fixture
-def register_user():
-    url = "/api/register/"
-    payload = dict(username="john", password="password", email="john@gmail.com")
-    return client.post(url, payload, format="json").json()
+        self.verification_info = {"name": "John", "bio": "test bio"}
 
+    def test_user(self):
+        # Test registration
+        response = self.client.post(
+            reverse("register"),
+            json.dumps(self.user_data),
+            content_type="application/json",
+        )
 
-@pytest.mark.django_db
-def test_register_user(register_user):
-    assert register_user["success"]
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["success"])
+        self.assertEqual(response.json()["username"], self.user_data["username"])
 
+        # Test login
+        self.user_data.pop("email")
 
-@pytest.fixture
-def login_user(register_user):
-    url = "/api/login/"
-    payload = dict(username="john", password="password")
-    return client.post(url, payload, format="json").json()
+        response = self.client.post(
+            reverse("login"),
+            json.dumps(self.user_data),
+            content_type="application/json",
+        )
 
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["success"])
 
-@pytest.mark.django_db
-def test_login_user(login_user):
-    assert login_user["success"]
+        # Test user info retrieval
+        response = self.client.get(reverse("user_info", args=[1]))
 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["username"], self.user_data["username"])
 
-@pytest.mark.django_db
-def test_verification_request(register_user, login_user):
-    url = f"/api/verification_request/{register_user['id']}"
-    payload = dict(name="john doe")
-    client.force_authenticate(user=User.objects.get(id=register_user["id"]))
-    response = client.post(url, payload, format="json", follow=True)
-    print(response.content)
-    assert response.status_code == 200
+        # Test user info update
+        response = self.client.put(
+            reverse("update_info", args=[1]),
+            json.dumps(self.new_info),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["message"], "User info updated successfully")
+
+        # Test logout
+        response = self.client.post(reverse("logout"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["logout"], "successful")
+
+    def test_verification_request(self):
+        # Test verification request
+        User = get_user_model()
+        user = User.objects.create(username="john", password="password")
+        user.is_staff = True
+        user.save()
+        self.client.force_login(user)
+        self.verification_info["user"] = user.id
+
+        response = self.client.post(
+            reverse("verification_request", args=[user.id]),
+            json.dumps(self.verification_info),
+            content_type="application/json",
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["message"], "verification request submitted successfully"
+        )
+
+        # Test verification request retrieval
+        response = self.client.get(reverse("verification_requests"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["user"], user.username)
+
+        # Test verification request approval
+        response = self.client.patch(
+            reverse("verification_request_approval", args=[user.id]),
+            json.dumps({"approval_status": "approved"}),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["is verified"])

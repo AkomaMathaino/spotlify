@@ -8,7 +8,7 @@ from artists.models import Artist
 # Create your tests here.
 class AlbumListTestCase(TestCase):
     def setUp(self):
-        # Create a test users, artists, and albums
+        # Create test users, artists, and albums
         User = get_user_model()
         self.user1 = User.objects.create_user(
             username="testuser1", password="testpassword"
@@ -32,12 +32,11 @@ class AlbumListTestCase(TestCase):
         self.client.login(username="testuser1", password="testpassword")
 
     def test_album_list_post(self):
-        # Send a POST request to the album_list endpoint
+        # Test album creation
         response = self.client.post(
             reverse("album_list", args=[self.user1.pk]), self.album2_data, format="json"
         )
 
-        # Assert the response status code and content
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["title"], self.album2_data["title"])
         self.assertEqual(response.json()["year"], self.album2_data["year"])
@@ -45,6 +44,7 @@ class AlbumListTestCase(TestCase):
         self.assertEqual(response.json()["collaborators"].pop(), self.artist2.pk)
 
     def test_album_list_get(self):
+        # Test album retrieval
         self.client.post(
             reverse("album_list", args=[self.user1.pk]), self.album1_data, format="json"
         )
@@ -64,6 +64,7 @@ class AlbumListTestCase(TestCase):
         self.assertEqual(albums[1]["collaborators"].pop(), self.artist2.pk)
 
     def test_album_delete(self):
+        # Test album deletion
         response = self.client.post(
             reverse("album_list", args=[self.user1.pk]), self.album1_data, format="json"
         )

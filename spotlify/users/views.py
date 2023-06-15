@@ -34,7 +34,12 @@ def register(request):
 
         # Return JSON response with success message
         return JsonResponse(
-            {"success": True, "message": "User created successfully", "id": user.id}
+            {
+                "success": True,
+                "message": "User created successfully",
+                "id": user.id,
+                "username": user.username,
+            }
         )
 
 
@@ -49,7 +54,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            response_data = {"success": True, "message": "Login successful"}
+            response_data = {"success": True, "message": f"{username} login successful"}
             return JsonResponse(response_data)
         else:
             response_data = {"success": False, "message": "Invalid credentials"}
@@ -108,9 +113,7 @@ def verification_request(request, pk):
             bio = data.get("bio")
         else:
             bio = None
-        verification_request = VerificationRequest.objects.create(
-            user=user, name=name, bio=bio
-        )
+        VerificationRequest.objects.create(user=user, name=name, bio=bio)
         return JsonResponse({"message": "verification request submitted successfully"})
     return JsonResponse({"error": "Invalid request method"}, status=400)
 

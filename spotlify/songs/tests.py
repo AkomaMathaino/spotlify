@@ -25,19 +25,19 @@ class SongListTestCase(TestCase):
         self.client.login(username="testuser", password="testpassword")
 
     def test_song_list_post(self):
-        # Send a POST request to the song_list endpoint
+        # Test song creation
         response = self.client.post(
             reverse("song_list", args=[self.user.pk, self.album.pk]),
             self.song1_data,
             format="json",
         )
 
-        # Assert the response status code and content
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["title"], self.song1_data["title"])
         self.assertEqual(response.json()["genre"], self.song1_data["genre"])
 
     def test_song_list_get(self):
+        # Test song retrieval
         self.client.post(
             reverse("song_list", args=[self.user.pk, self.album.pk]),
             self.song1_data,
@@ -59,6 +59,7 @@ class SongListTestCase(TestCase):
         self.assertEqual(songs[1]["title"], self.song2_data["title"])
 
     def test_song_delete(self):
+        # Test song deletion
         response = self.client.post(
             reverse("song_list", args=[self.user.pk, self.album.pk]),
             self.song1_data,

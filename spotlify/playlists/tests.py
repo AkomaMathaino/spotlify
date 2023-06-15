@@ -12,6 +12,7 @@ import datetime
 # Create your tests here.
 class PlaylistTestCase(TestCase):
     def setUp(self):
+        # Create a test user, artist, album, song, and playlist data
         User = get_user_model()
         self.user = User.objects.create_user(
             username="testuser", password="testpassword"
@@ -31,6 +32,7 @@ class PlaylistTestCase(TestCase):
         self.client.login(username="testuser", password="testpassword")
 
     def test_playlist_list_post(self):
+        # Create playlist creation
         response = self.client.post(
             reverse("playlist_list", args=[self.user.pk]),
             self.playlist_data,
@@ -42,6 +44,7 @@ class PlaylistTestCase(TestCase):
         self.assertEqual(response.json()["user"], self.user.pk)
 
     def test_playlist_get(self):
+        # Test playlist retrieval
         playlist = Playlist.objects.create(title="Playlist Title", user=self.user)
 
         response1 = self.client.get(
@@ -63,6 +66,7 @@ class PlaylistTestCase(TestCase):
         self.assertEqual(playlist_data["user"], self.user.pk)
 
     def test_playlsit_delete(self):
+        # Test playlist deletion
         response = self.client.post(
             reverse("playlist_list", args=[self.user.pk]),
             self.playlist_data,
@@ -78,6 +82,7 @@ class PlaylistTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_playlist_patch(self):
+        # Test adding song to playlist
         response = self.client.post(
             reverse("playlist_list", args=[self.user.pk]),
             self.playlist_data,
@@ -94,6 +99,7 @@ class PlaylistTestCase(TestCase):
             format="json",
         )
 
+        # Test retrieval of songs on playlist
         response = self.client.get(
             reverse("playlist_specific", args=[self.user.pk, playlist_id]),
             format="json",
@@ -103,6 +109,7 @@ class PlaylistTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(playlist_data["songs"], songs)
 
+        # Test song deletion from playlist
         d = self.client.patch(
             reverse(
                 "playlist_song_delete", args=[self.user.pk, playlist_id, self.song.pk]

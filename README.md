@@ -17,3 +17,4 @@ Django is being used to model the data and handle HTTP requests. The app has als
 4. Run the docker containers with the command `docker compose up -d`.
 5. Make the database migrations with the commands `python manage.py makemigrations` followed by `python manage.py migrate`.
 6. API requests can now be made using an API testing tool, such as Insomnia, and data will be created, retrieved, updated, or deleted accordingly.
+7. Stop docker containers with the command `docker compose down --rmi all`.
